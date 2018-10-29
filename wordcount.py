@@ -38,8 +38,18 @@ Optional: define a helper function to avoid code duplication inside
 print_words() and print_top().
 
 """
+"""
+Assignment: Wordcount
+
+Description: Take in a file and return the number of words in the file. Also, take in 2 commands that change how it is run.
+
+Author: Aaron Jackson
+Github: TimeApollo
+"""
+__author__ = "TimeApollo"
 
 import sys
+import re
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
@@ -51,7 +61,32 @@ import sys
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
+def word_dict( filename ):
+    """returns a dict of keys of words and value of total count"""
+    word_count = {}
+    f = open( filename , 'rU')
+    text = f.read().lower().split()
+    f.close()
+    for word in text:
+        # the regex finds all non letters and any single quote with no letter after it.
+        word_no_punct = re.sub(r"[^a-z']+|\'(?![a-z]+)" , '' , word )
+        if not word_no_punct:
+            continue
+        elif word_count.get(word_no_punct):
+            word_count[word_no_punct] += 1
+        else:
+            word_count[word_no_punct] = 1
+    return word_count
 
+
+def print_top( filename ):
+    word_sort = sorted(word_dict(filename).items() , key=lambda pair: pair[1] , reverse=True)
+    for key , val in word_sort[:20]:
+        print( key + " " + str(val) )
+
+def print_words( filename ):
+    for key , val in word_dict(filename).items():
+        print( key + " " + str(val) )
 
 def main():
     if len(sys.argv) != 3:
