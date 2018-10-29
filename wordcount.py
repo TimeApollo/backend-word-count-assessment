@@ -61,21 +61,22 @@ import re
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
+
+# # the regex finds all non letters and any single quote with no letter after it.
+# didnt need but wanted to leave for example
+# word_no_punct = re.sub(r"[^a-z']+|\'(?![a-z]+)" , '' , word )
 def word_dict( filename ):
     """returns a dict of keys of words and value of total count"""
     word_count = {}
-    f = open( filename , 'rU')
-    text = f.read().lower().split()
-    f.close()
+    text = ''
+    with open( filename , 'r') as f:
+        text = f.read().lower().split()
     for word in text:
-        # the regex finds all non letters and any single quote with no letter after it.
-        word_no_punct = re.sub(r"[^a-z']+|\'(?![a-z]+)" , '' , word )
-        if not word_no_punct:
-            continue
-        elif word_count.get(word_no_punct):
-            word_count[word_no_punct] += 1
+        if word_count.get(word):
+            word_count[word] += 1
         else:
-            word_count[word_no_punct] = 1
+            word_count[word] = 1
+    
     return word_count
 
 
@@ -85,7 +86,7 @@ def print_top( filename ):
         print( key + " " + str(val) )
 
 def print_words( filename ):
-    for key , val in word_dict(filename).items():
+    for key , val in sorted(word_dict(filename).items()):
         print( key + " " + str(val) )
 
 def main():
